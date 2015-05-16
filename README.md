@@ -4,7 +4,7 @@
 1. Make sure that you have [sbt](http://www.scala-sbt.org) installed. This is a sbt plugin.
 2. Clone/download this repository
 3. In this directory, run `sbt +publish-local`, that will publish this plugin into your local ivy repo
-4. To `project/plugins.sbt` file in your project add `addSbtPlugin("darkyenus" %% "sbthotswap" % "0.0-SNAPSHOT")`
+4. To `project/plugins.sbt` file in your project add `addSbtPlugin("darkyenus" %% "sbthotswap" % "1.0")`
 5. Run your project in hotswap mode with `sbt hotswap`
 6. Do changes to your code, save and changes will be automatically reloaded at runtime
 
