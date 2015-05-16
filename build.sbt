@@ -1,0 +1,18 @@
+sbtPlugin := true
+
+name := "SBTHotswap"
+
+organization := "darkyenus"
+
+version := "0.0-SNAPSHOT"
+
+scalaVersion := "2.11.5"
+
+startYear := Some(2014)
+
+crossScalaVersions in Compile := Seq(scalaVersion.value, "2.10.4")
+
+packageOptions in Compile += Package.ManifestAttributes(
+  "Agent-Class" -> "darkyenus.sbthotswap.agent.AgentMain",
+  "Premain-Class" -> "darkyenus.sbthotswap.agent.AgentMain",
+  "Can-Redefine-Classes" -> "true")
