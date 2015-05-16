@@ -8,7 +8,7 @@ version := "1.0"
 
 scalaVersion := "2.11.5"
 
-startYear := Some(2014)
+startYear := Some(2015)
 
 crossScalaVersions in Compile := Seq(scalaVersion.value, "2.10.4")
 
