@@ -67,6 +67,9 @@ public class AgentMain {
                             } catch (UnmodifiableClassException e) {
                                 System.err.println("Class for redefinition not modifiable!");
                                 e.printStackTrace();
+                            } catch (UnsupportedOperationException e){
+                                System.err.println("Failed to redefine class.");
+                                e.printStackTrace();
                             }
                         }else{
                             System.out.println("WARN: Unimplemented action "+action);

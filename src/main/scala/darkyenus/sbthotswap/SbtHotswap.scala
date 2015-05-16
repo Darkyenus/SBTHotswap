@@ -55,8 +55,8 @@ object SbtHotswap extends AutoPlugin {
         if(!processRunning){
           val cp = fullCP.map(_.data).mkString(":")
           val fo = new ForkOptions(
-            workingDirectory = Some((baseDirectory in Compile).value),
-            runJVMOptions = Seq("-cp", cp, javaAgentOption.value, (mainClass in hotswap_i).value.get))
+            workingDirectory = Some((baseDirectory in (Compile, hotswap_i )).value),
+            runJVMOptions = Seq("-cp", cp, javaAgentOption.value, (mainClass in (Compile, hotswap_i)).value.get))
           val javaProcess = Fork.java.fork(fo,Nil)
 
           new Thread("SBT Hotswap - Waiting For Process"){
