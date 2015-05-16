@@ -8,18 +8,14 @@ import java.io.IOException;
 
 /** Class to read a ClassType from a DataInputStream (.class file).
  * @author Per Bothner
+ *
+ * Modified by Jan Polák
  */
 
 public class ClassFileInput extends DataInputStream
 {
   ClassType ctype;
   InputStream str;
-
-  public ClassFileInput (InputStream str)
-       throws IOException
-  {
-    super(str);
-  }
 
   public ClassFileInput (ClassType ctype, InputStream str)
        throws IOException, ClassFormatError
@@ -171,11 +167,11 @@ public class ClassFileInput extends DataInputStream
   public Attribute readAttribute (String name, int length, AttrContainer container)
     throws IOException
   {
-    if (name == "SourceFile" && container instanceof ClassType)
+    if ("SourceFile".equals(name) && container instanceof ClassType)
       {
 	return new SourceFileAttr(readUnsignedShort(), (ClassType) container);
       }
-    else if (name == "Code" && container instanceof Method)
+    else if ("Code".equals(name) && container instanceof Method)
       {
         CodeAttr code = new CodeAttr((Method) container);
         code.fixup_count = -1;
@@ -197,7 +193,7 @@ public class ClassFileInput extends DataInputStream
 	readAttributes(code);
 	return code;
       }
-    else if (name == "LineNumberTable" && container instanceof CodeAttr)
+    else if ("LineNumberTable".equals(name) && container instanceof CodeAttr)
       {
         int count = 2 * readUnsignedShort();
 	short[] numbers = new short[count];
@@ -207,7 +203,7 @@ public class ClassFileInput extends DataInputStream
 	  }
 	return new LineNumbersAttr(numbers, (CodeAttr) container);
       }
-    else if (name == "LocalVariableTable" && container instanceof CodeAttr)
+    else if ("LocalVariableTable".equals(name) && container instanceof CodeAttr)
       {
 	CodeAttr code = (CodeAttr) container;
 	LocalVarsAttr attr = new LocalVarsAttr(code);
@@ -246,18 +242,18 @@ public class ClassFileInput extends DataInputStream
 	  }
 	return attr;
       }
-    else if (name == "Signature" && container instanceof Member)
+    else if ("Signature".equals(name) && container instanceof Member)
       {
 	return new SignatureAttr(readUnsignedShort(), (Member) container);
       }
-    else if (name == "StackMapTable" && container instanceof CodeAttr)
+    else if ("StackMapTable".equals(name) && container instanceof CodeAttr)
       {
         byte[] data = new byte[length];
         readFully(data, 0, length);
         return new StackMapTableAttr(data, (CodeAttr) container);
       }
-    else if ((name == "RuntimeVisibleAnnotations"
-              || name == "RuntimeInvisibleAnnotations")
+    else if (("RuntimeVisibleAnnotations".equals(name)
+              || "RuntimeInvisibleAnnotations".equals(name))
              && (container instanceof Field
                  || container instanceof Method
                  || container instanceof ClassType))
@@ -270,11 +266,11 @@ public class ClassFileInput extends DataInputStream
           }
         return new RuntimeAnnotationsAttr(name, entries, numEntries, container);
       }
-    else if (name == "ConstantValue" && container instanceof Field)
+    else if ("ConstantValue".equals(name) && container instanceof Field)
       {
 	return new ConstantValueAttr(readUnsignedShort());
       }
-    else if (name == "InnerClasses" && container instanceof ClassType)
+    else if ("InnerClasses".equals(name) && container instanceof ClassType)
       {
         int count = 4 * readUnsignedShort();
 	short[] data = new short[count]; 
@@ -284,13 +280,13 @@ public class ClassFileInput extends DataInputStream
 	  }
 	return new InnerClassesAttr(data, (ClassType) container);
      }
-    else if (name == "EnclosingMethod" && container instanceof ClassType)
+    else if ("EnclosingMethod".equals(name) && container instanceof ClassType)
       {
         int class_index = readUnsignedShort();
         int method_index = readUnsignedShort();
 	return new EnclosingMethodAttr(class_index, method_index, (ClassType) container);
      }
-    else if (name == "Exceptions" && container instanceof Method)
+    else if ("Exceptions".equals(name) && container instanceof Method)
       {
 	Method meth = (Method)container;
 	int count = readUnsignedShort();
@@ -300,7 +296,7 @@ public class ClassFileInput extends DataInputStream
         meth.setExceptions(exn_indices);
 	return meth.getExceptionAttr();
       }
-    else if (name == "SourceDebugExtension" && container instanceof ClassType)
+    else if ("SourceDebugExtension".equals(name) && container instanceof ClassType)
       {
 	SourceDebugExtAttr attr
 	  = new SourceDebugExtAttr((ClassType) container);
@@ -310,7 +306,7 @@ public class ClassFileInput extends DataInputStream
 	attr.dlength = length;
 	return attr;
       }
-    else if (name == "AnnotationDefault" && container instanceof Method)
+    else if ("AnnotationDefault".equals(name) && container instanceof Method)
       {
         AnnotationEntry.Value value = RuntimeAnnotationsAttr.readAnnotationValue(this, container.getConstants());
         return new AnnotationDefaultAttr(name, value, container);
