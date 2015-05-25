@@ -30,13 +30,13 @@ object SbtHotswap extends AutoPlugin {
   // (special name)
   object autoImport {
     val hotswap_i = taskKey[Unit]("Recompiles and hotswaps the code into the running application.")
-    val javaAgentOption = settingKey[String]("-javaagent: type string that goes into the hotswap java options")
+    val javaAgentOption = settingKey[Seq[String]]("-javaagent: type string that goes into the hotswap java options")
     val javaAgentPort = settingKey[Int]("Port on which hotswap communication will run")
 
     lazy val baseHotswapSettings = Seq(
       javaAgentPort := 5011,
       javaAgentOption := {
-        s"-javaagent:${file(getClass.getProtectionDomain.getCodeSource.getLocation.toURI.getPath).getCanonicalPath}=${javaAgentPort.value}"
+        Seq(s"-javaagent:${file(getClass.getProtectionDomain.getCodeSource.getLocation.toURI.getPath).getCanonicalPath}=${javaAgentPort.value}")
       },
       hotswap_i := {
         val log = streams.value.log
@@ -56,7 +56,7 @@ object SbtHotswap extends AutoPlugin {
           val cp = fullCP.map(_.data).mkString(":")
           val fo = new ForkOptions(
             workingDirectory = Some((baseDirectory in (Compile, hotswap_i )).value),
-            runJVMOptions = Seq("-cp", cp, javaAgentOption.value, (mainClass in (Compile, hotswap_i)).value.get))
+            runJVMOptions = javaAgentOption.value ++ Seq("-cp", cp, (mainClass in (Compile, hotswap_i)).value.get))
           val javaProcess = Fork.java.fork(fo,Nil)
 
           new Thread("SBT Hotswap - Waiting For Process"){

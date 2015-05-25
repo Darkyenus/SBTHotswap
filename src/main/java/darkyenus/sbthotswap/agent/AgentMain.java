@@ -23,12 +23,10 @@ import java.util.ArrayList;
 public class AgentMain {
 
     public static void agentmain(String agentArgs, Instrumentation inst){
-        System.out.println("YES, I'm running! (agentmain)"+(agentArgs)+" & "+inst);
         initialize(agentArgs, inst);
     }
 
     public static void premain(String agentArgs, Instrumentation inst){
-        System.out.println("YES, I'm running! (premain)  "+(agentArgs)+" & "+inst);
         initialize(agentArgs, inst);
     }
 
@@ -41,6 +39,8 @@ public class AgentMain {
                 try {
                     ServerSocket listener = new ServerSocket(port);
                     Socket socket = listener.accept();
+
+                    System.out.println("Hotswap agent attached and listening");
 
                     DataInputStream in = new DataInputStream(socket.getInputStream());
 
